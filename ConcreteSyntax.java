@@ -5,8 +5,8 @@
 //  Each method corresponds to a concrete syntax grammar rule, 
 // which appears as a comment at the beginning of the method.
 
-// This code DOES NOT implement a parser for KAY. You have to complete
-// the code and also make sure it implements a parser for KAY - not something
+// This code DOES NOT implement a parser for JAY. You have to complete
+// the code and also make sure it implements a parser for JAY - not something
 // else.
 
 public class ConcreteSyntax {
@@ -46,11 +46,15 @@ public class ConcreteSyntax {
 	public Program program() {
 		// TODO TO BE COMPLETED 
 		// Program --> main '{' Declarations Statements '}'
-		String[] header = { };
+		
+		String[] header = { "void", "main", "(", ")", "{" };
 		Program p = new Program();
 		for (int i = 0; i < header.length; i++)
 			// bypass " main { "
 			match(header[i]);
+		p.decpart = declarations();
+		p.body = statements();
+		match("}");
 		return p;
 	}
 
@@ -125,9 +129,11 @@ public class ConcreteSyntax {
 			s = ifStatement();
 		else if (token.getValue().equals("while")) {
 			// WhileStatement
+			s = whileStatement();
 			// TODO TO BE COMPLETED
 		} else if (token.getType().equals("Identifier")) { // Assignment
 			// TODO TO BE COMPLETED
+			s = assignment();
 		} else
 			throw new RuntimeException(SyntaxError("Statement"));
 		return s;
@@ -147,6 +153,13 @@ public class ConcreteSyntax {
 		Assignment a = new Assignment();
 		if (token.getType().equals("Identifier")) {
 			// TODO TO BE COMPLETED
+			// implement full assignment definition?
+			a.target = new Variable();
+			a.target.id = token.getValue();
+			token = input.nextToken();
+			match("=");
+			a.source = expression();
+			match(";");
 		} else
 			throw new RuntimeException(SyntaxError("Identifier"));
 		return a;
@@ -174,8 +187,12 @@ public class ConcreteSyntax {
 		Expression e;
 		e = relation();
 		while (token.getValue().equals("&&")) {
-			b = new Binary();
 			// TODO TO BE COMPLETED
+			b = new Binary();
+			b.term1 = e;
+			b.op = new Operator(token.getValue());
+			token = input.nextToken();
+			b.term2 = relation();
 			e = b;
 		}
 		return e;
@@ -193,6 +210,10 @@ public class ConcreteSyntax {
 				|| token.getValue().equals("<>")) {
 			b = new Binary();
 			// TODO TO BE COMPLETED
+			b.term1 = e;
+			b.op = new Operator(token.getValue());
+			token = input.nextToken();
+			b.term2 = addition();
 			e = b;
 		}
 		return e;
@@ -205,6 +226,12 @@ public class ConcreteSyntax {
 		e = term();
 		while (token.getValue().equals("+") || token.getValue().equals("-")) {
 			// TODO TO BE COMPLETED
+			b = new Binary();
+			b.term1 = e;
+			b.op = new Operator(token.getValue());
+			token = input.nextToken();
+			b.term2 = term();
+			e = b;
 		}
 		return e;
 	}
@@ -274,7 +301,30 @@ public class ConcreteSyntax {
 	private Loop whileStatement() {
 		// WhileStatement --> while ( Expression ) Statement
 		Loop l = new Loop();
+		String[] whileLoop = {"while", "("};
+		for (int i = 0; i< whileLoop.length; i++)
+		{
+			match(whileLoop[i]);
+		}
+		if(token.getType().equals("Expression"))
+		{
+			l.test = expression();
+			match(")");
+			if(token.getType().equals("Statement"))
+			{
+				l.body = statement();
+			}
+			else
+			{
+				throw new RuntimeException(SyntaxError("Statement"));
+			}
+		}
+		else
+		{
+			throw new RuntimeException(SyntaxError("Expression"));
+		}
 		// TODO TO BE COMPLETED
+		
 		return l;
 	}
 
