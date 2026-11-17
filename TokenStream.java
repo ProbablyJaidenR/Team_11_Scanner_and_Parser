@@ -82,39 +82,33 @@ public class TokenStream {
 			switch (nextChar) {
 			case '<':
 				// <=
+				nextChar = readChar();
 				if (nextChar == '=') {
 					t.setValue(t.getValue() + nextChar);
 					nextChar = readChar();
-					return t;
-				} else {
-					t.setType("Other");
 				}
+				return t;
 			case '>':
 				// >=
+				nextChar = readChar();
 				if (nextChar == '=') {
 					t.setValue(t.getValue() + nextChar);
 					nextChar = readChar();
-					return t;
-				} else {
-					t.setType("Other");
 				}
+				return t;
 			case '=':
 				// ==
+				nextChar = readChar();
 				if (nextChar == '=') {
 					t.setValue(t.getValue() + nextChar);
 					nextChar = readChar();
-					return t;
-				} else {
-					t.setType("Other");
 				}
+				return t;
 			case '!':
 				// !=
+				nextChar = readChar();
 				if (nextChar == '=') {
 					t.setValue(t.getValue() + nextChar);
-					nextChar = readChar();
-					return t;
-				} else {
-					t.setType("Operator");
 					nextChar = readChar();
 				}
 				return t;
@@ -124,7 +118,6 @@ public class TokenStream {
 				if (nextChar == '|') {
 					t.setValue(t.getValue() + nextChar);
 					nextChar = readChar();
-					return t;
 				} else {
 					t.setType("Other");
 				}
@@ -136,11 +129,9 @@ public class TokenStream {
 				if (nextChar == '&') {
 					t.setValue(t.getValue() + nextChar); // check
 					nextChar = readChar();
-					return t;
 				} else {
 					t.setType("Other");
 				}
-
 				return t;
 
 			default: // all other operators
