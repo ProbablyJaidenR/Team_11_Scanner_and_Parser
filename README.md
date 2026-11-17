@@ -1,3 +1,3 @@
 # Team_11_Scanner_and_Parser
 
-Testing
+Joel Sampson, Samara Landais, and Jaiden Roman
