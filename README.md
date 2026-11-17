@@ -2,4 +2,4 @@
 
 Joel Sampson, Samara Landais, and Jaiden Roman
 
-> Note: The code was collaborated between the three of us via LiveShare and pushed on one computer.
+A Brief Project Overview instructions on how to run the scanner and parser or a testing section.
